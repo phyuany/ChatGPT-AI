@@ -1,6 +1,9 @@
 package controller
 
 import (
+	"html/template"
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"jkapp.net/ai/response"
 )
@@ -11,11 +14,12 @@ func Info(ctx *gin.Context) {
 }
 
 func Index(ctx *gin.Context) {
-	domain := ctx.Request.Host
 
-	response.Success(ctx,
-		gin.H{
-			"completions": domain + "/completions",
-		},
-		"success")
+	tmpl, err := template.ParseFiles("html/index.html")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// 渲染到浏览器
+	tmpl.Execute(ctx.Writer, nil)
 }

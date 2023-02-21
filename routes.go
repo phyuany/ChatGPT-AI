@@ -9,6 +9,7 @@ import (
 func CollectRoute(r *gin.Engine) *gin.Engine {
 	r.Use(middleware.CORSMiddleware(), middleware.RecoveryMiddleware())
 	r.GET("", controller.Index)
+	// 预留一个需鉴权的接口
 	r.GET("/auth/info", middleware.AuthMiddleware(), controller.Info)
 
 	completionsRoutes := r.Group("/completions")

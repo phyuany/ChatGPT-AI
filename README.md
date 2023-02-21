@@ -21,7 +21,7 @@ go get
 # 添加环境变量
 export GPT3_API_KEY="此处填写真实的OPENAI API KEY"
 # 运行
-go run mian.go routes.go
+go run main.go routes.go
 ```
 
 ## 二、接口列表

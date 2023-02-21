@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Bootstrap Styles CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, hsl(256, 76%, 97%), hsl(193, 100%, 52%));
+        }
+
+        h2 {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 class="text-center">在线ChatGPT</h2>
+
+        <div class="form-group mt-4">
+            <label for="exampleFormControlInput1">请输入问题:</label>
+            <textarea class="form-control"></textarea>
+        </div>
+
+        <div class="form-group mt-4 text-right">
+            <button id="countDownButton" class="btn btn-primary">确认</button>
+        </div>
+
+
+        <div class="form-group mt-4" id="resultDiv" hidden>
+            <label for="exampleFormControlInput1">回答如下:</label>
+            <pre class="form-control" id="resultPre" style="height: auto;"></textarea>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+        function resetCountButton () {
+            document.getElementById('countDownButton').innerHTML = '确认';
+            document.getElementById('countDownButton').disabled = false;
+        }
+
+        document.getElementById('countDownButton').onclick = function () {
+            var timeLeft = 60;
+            document.getElementById('countDownButton').innerHTML = timeLeft + 's';
+            // 设置按钮不可用
+            document.getElementById('countDownButton').disabled = true;
+
+            var timerInterval = setInterval(function () {
+                timeLeft--;
+                document.getElementById('countDownButton').innerHTML = timeLeft + 's';
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    resetCountButton();
+                }
+            }, 1000);
+
+            // 获取文本内容发起get请求
+            var text = document.getElementsByTagName('textarea')[0].value;
+            var url = '/completions?token=' + text;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var res = JSON.parse(xhr.responseText);
+                    console.log(res);
+                    document.getElementById('resultPre').innerHTML = res.data.result;
+                    // 显示结果
+                    document.getElementById('resultDiv').hidden = false;
+                    // 清除定时器
+                    clearInterval(timerInterval);
+                    resetCountButton();
+                }
+            }
+        }
+    </script>
+
+    <!-- Bootstrap Javascript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>
