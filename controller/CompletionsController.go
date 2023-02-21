@@ -36,9 +36,11 @@ func (c CompletionsController) Show(ginCtx *gin.Context) {
 	backCtx := context.Background()
 
 	req := gogpt.CompletionRequest{
-		Model:     gogpt.GPT3TextDavinci003,
-		MaxTokens: 500,
-		Prompt:    token,
+		Model:       gogpt.GPT3TextDavinci003,
+		MaxTokens:   1024,
+		Prompt:      token,
+		Temperature: 1,
+		TopP:        1,
 	}
 	resp, err := client.CreateCompletion(backCtx, req)
 	if err != nil {
