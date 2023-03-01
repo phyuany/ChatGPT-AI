@@ -35,7 +35,7 @@
 <body>
 
     <div class="container">
-        <h2 class="text-center">AI在线问答-ChatGPT（人数太多，账号已欠费-正在想办法）</h2>
+        <h2 class="text-center">AI在线问答-ChatGPT</h2>
 
         <div class="form-group mt-4">
             <label for="exampleFormControlInput1">请输入问题:</label>
@@ -88,7 +88,9 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     var res = JSON.parse(xhr.responseText);
-                    console.log(res);
+                    if (res.code !== 200 && res.data.error_detail.indexOf('429') !== -1) {
+                        res.data.result = 'OpenAI接口服务大概率已欠费，如需要可以联系网站管理员！错误信息: '+res.data.error_detail;
+                    }
                     document.getElementById('resultPre').innerHTML = res.data.result;
                     // 显示结果
                     document.getElementById('resultDiv').hidden = false;
