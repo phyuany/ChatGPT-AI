@@ -74,8 +74,8 @@
 
     <div class="form-group mt-4" id="resultDiv" hidden="hidden">
         <label>回答如下:</label>
-        <div class="form-control" id="resultPre" style="height: 500px;">
-            </div>
+        <pre class="form-control" id="resultPre" style="height: 500px;">
+            </pre>
     </div>
 </div>
 <footer class="text-center" style="margin-top: 10px; margin-bottom: 10px;">
@@ -99,7 +99,7 @@
 
         changeButton(true, '处理中...')
 
-        const url = '/completions?token=' + text;
+        const url = '/completions/sse?token=' + text;
         const evtSource = new EventSource(url);
         console.log(evtSource.withCredentials);
         console.log(evtSource.readyState);
