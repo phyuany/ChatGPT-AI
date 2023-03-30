@@ -6,7 +6,7 @@
 
 使用`golang`封装了`ChatGPT`的`AI`接口，后续有时间会继续完善。
 
-项目示例地址：<https://ai.jkapp.net>
+项目示例地址：**不再提供示例地址**
 
 ### 1.2 如何运行
 
@@ -14,7 +14,7 @@
 
 ```bash
 # 下载项目
-git clone https://github.com/jikerdev/ai.git
+git clone https://github.com/jikerdev/ChatGPT-AI.git
 # 安装依赖
 cd ai
 go get
@@ -32,7 +32,7 @@ go run main.go routes.go
 
 - 请求方式：`GET`
 
-- 接口示例地址: <https://ai.jkapp.net/completions?token=此处填写问题>
+- 本地接口示例: <http://localhost/completions?token=此处填写问题>
 
 #### 2.1.1 请求参数
 
@@ -42,20 +42,10 @@ go run main.go routes.go
 
 #### 2.1.2 示例
 
-请求示例
+本地请求示例
 
 ```text
-GET https://ai.jkapp.net/completions?token=帮我写一首情诗
+GET http://localhost/completions?token=帮我写一首情诗
 ```
 
-响应示例
-
-```json
-{
-  "code": 200,
-  "data": {
-    "result": "\n\n一场相遇至今无知，醉眼缘起挥舞定情思。\n情深似海把一切尽息，她内心惊喜不再深沉。\n多少春风吹凉秋雨，她笑容照亮心间梦想。\n轻声唤慰彩虹般安抚，爱的芬芳于心里发酵。\n岁月静好两情相伴，彼此从此甜蜜于心田。"
-  },
-  "msg": "success"
-}
-```
+响应数据头为：`content-type: text/event-stream; charset=utf-8`
