@@ -1,10 +1,10 @@
 package middleware
 
 import (
+	"aiapp.pro/chat/response"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"jkapp.net/ai/response"
 )
 
 func RecoveryMiddleware() gin.HandlerFunc {

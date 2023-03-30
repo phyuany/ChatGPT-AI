@@ -1,10 +1,10 @@
-module jkapp.net/ai
+module aiapp.pro/chat
 
 go 1.19
 
 require (
 	github.com/gin-gonic/gin v1.8.2
-	github.com/sashabaranov/go-gpt3 v1.1.1
+	github.com/sashabaranov/go-openai v1.5.7
 	github.com/spf13/viper v1.15.0
 )
 

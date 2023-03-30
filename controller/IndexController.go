@@ -1,11 +1,11 @@
 package controller
 
 import (
+	"aiapp.pro/chat/response"
 	"html/template"
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"jkapp.net/ai/response"
 )
 
 func Info(ctx *gin.Context) {

@@ -3,7 +3,7 @@
 
 <head>
     <title>AI在线问答-ChatGPT | ai.jkapp.net</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <!-- Bootstrap Styles CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <style>
@@ -20,91 +20,134 @@
             white-space: pre-wrap;
             min-height: 300px;
         }
+
+        li {
+            list-style: none;
+        }
+
+        /*设置resultDiv竖向滚动,内容自动滚动*/
+        #resultDiv {
+            overflow-y: scroll;
+            height: 500px;
+        }
+
+        #resultDiv::-webkit-scrollbar {
+            display: none;
+        }
+
+        #resultDiv {
+            -ms-overflow-style: none;
+        }
+
+        #resultDiv {
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3LZ2V8JG76"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'G-3LZ2V8JG76');
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-3LZ2V8JG76');
 </script>
 
 <body>
 
-    <div class="container">
-        <h2 class="text-center">AI在线问答-ChatGPT</h2>
+<div class="container">
+    <h2 class="text-center">AI在线问答-ChatGPT</h2>
 
-        <div class="form-group mt-4">
-            <label for="exampleFormControlInput1">请输入问题:</label>
-            <textarea class="form-control"></textarea>
-        </div>
-
-        <div class="form-group mt-4 text-right">
-            <button id="countDownButton" class="btn btn-primary">确认</button>
-        </div>
-
-
-        <div class="form-group mt-4" id="resultDiv" hidden>
-            <label for="exampleFormControlInput1">回答如下:</label>
-            <pre class="form-control" id="resultPre" style="height: auto;"></pre>
-        </div>
+    <div class="form-group mt-4">
+        <label>请输入问题:</label>
+        <textarea class="form-control"></textarea>
     </div>
-    <footer class="text-center" style="margin-top: 10px; margin-bottom: 10px;">
-        <span>在Github查看源码: <a href="https://github.com/jikerdev/ChatGPT-AI" target="_blank">https://github.com/jikerdev/ChatGPT-AI</a></span>
-    </footer>
+
+    <div class="form-group mt-4 text-right">
+        <button id="submitBtn" class="btn btn-primary">确认</button>
+    </div>
+
+    <div class="form-group mt-4" id="resultDiv" hidden="hidden">
+        <label>回答如下:</label>
+        <div class="form-control" id="resultPre" style="height: 500px;">
+            </div>
+    </div>
+</div>
+<footer class="text-center" style="margin-top: 10px; margin-bottom: 10px;">
+    <span>在Github查看源码: <a href="https://github.com/jikerdev/ChatGPT-AI" target="_blank">https://github.com/jikerdev/ChatGPT-AI</a></span>
+</footer>
 
 
-    <script type="text/javascript">
+<script type="text/javascript">
+    function changeButton(disabled, text) {
+        let button = document.getElementById('submitBtn');
+        button.innerHTML = text;
+        button.disabled = disabled;
+    }
 
-        function resetCountButton () {
-            document.getElementById('countDownButton').innerHTML = '确认';
-            document.getElementById('countDownButton').disabled = false;
+    document.getElementById('submitBtn').onclick = function () {
+        const text = document.getElementsByTagName('textarea')[0].value;
+        if (text.length < 5) {
+            alert('文字长度不能小于5');
+            return;
         }
 
-        document.getElementById('countDownButton').onclick = function () {
-            var timeLeft = 60;
-            document.getElementById('countDownButton').innerHTML = timeLeft + 's';
-            // 设置按钮不可用
-            document.getElementById('countDownButton').disabled = true;
+        changeButton(true, '处理中...')
 
-            var timerInterval = setInterval(function () {
-                timeLeft--;
-                document.getElementById('countDownButton').innerHTML = timeLeft + 's';
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    resetCountButton();
-                }
-            }, 1000);
+        const url = '/completions?token=' + text;
+        const evtSource = new EventSource(url);
+        console.log(evtSource.withCredentials);
+        console.log(evtSource.readyState);
+        console.log(evtSource.url);
 
-            // 获取文本内容发起get请求
-            var text = document.getElementsByTagName('textarea')[0].value;
-            var url = '/completions?token=' + text;
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
-            xhr.send();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var res = JSON.parse(xhr.responseText);
-                    if (res.code !== 200 && res.data.error_detail.indexOf('429') !== -1) {
-                        res.data.result = 'OpenAI接口服务大概率已欠费，如需要可以联系网站管理员！错误信息: '+res.data.error_detail;
-                    }
-                    document.getElementById('resultPre').innerHTML = res.data.result;
-                    // 显示结果
-                    document.getElementById('resultDiv').hidden = false;
-                    // 清除定时器
-                    clearInterval(timerInterval);
-                    resetCountButton();
-                }
+        const eventList = document.getElementById('resultPre');
+        const newElement = document.createElement("li");
+        newElement.style.color = 'red';
+        newElement.textContent = "提问：" + text;
+        eventList.appendChild(newElement);
+
+        evtSource.onopen = function () {
+            console.log("Connection to server opened.");
+            document.getElementById('resultDiv').hidden = false;
+        };
+
+        evtSource.onmessage = function (e) {
+            console.log('onmessage:', e.data);
+            eventList.innerHTML = eventList.innerHTML + e.data;
+            if (e.data.indexOf('。') !== -1) {
+                eventList.appendChild(document.createElement("br"));
             }
-        }
-    </script>
+            if (e.data.indexOf('；') !== -1) {
+                eventList.appendChild(document.createElement("br"));
+                eventList.appendChild(document.createElement("br"));
+            }
+            if (e.data.indexOf('：') !== -1) {
+                eventList.appendChild(document.createElement("br"));
+                eventList.appendChild(document.createElement("br"));
+            }
+            document.getElementById("resultPre").scrollTop = document.getElementById("resultPre").scrollHeight;
+        };
 
-    <!-- Bootstrap Javascript -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        evtSource.onerror = function () {
+            console.log("EventSource failed.");
+        };
+
+        evtSource.addEventListener('close', function (e) {
+            evtSource.close();
+            changeButton(false, '确认')
+            eventList.appendChild(document.createElement("br"));
+        }, false);
+    }
+</script>
+
+<!-- Bootstrap Javascript -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 
 </html>

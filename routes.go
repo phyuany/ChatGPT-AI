@@ -1,9 +1,9 @@
 package main
 
 import (
+	"aiapp.pro/chat/controller"
+	"aiapp.pro/chat/middleware"
 	"github.com/gin-gonic/gin"
-	"jkapp.net/ai/controller"
-	"jkapp.net/ai/middleware"
 )
 
 func CollectRoute(r *gin.Engine) *gin.Engine {
@@ -15,6 +15,7 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 	completionsRoutes := r.Group("/completions")
 	completionsController := controller.NewCompletionsController()
 	completionsRoutes.GET("", completionsController.Show)
+	completionsRoutes.GET("/sse", completionsController.SSE)
 
 	return r
 }
