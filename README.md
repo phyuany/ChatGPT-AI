@@ -6,7 +6,11 @@
 
 使用`golang`封装了`ChatGPT`的`AI`接口，后续有时间会继续完善。
 
-项目示例地址：**不再提供示例地址**
+项目示例地址：**由于开放后，大量访问会导致作者的OpenAI账号消耗殆尽，所以不再提供示例地址**
+
+运行效果如下：
+
+![效果图](./demo.png)
 
 ### 1.2 如何运行
 
@@ -14,7 +18,7 @@
 
 ```bash
 # 下载项目
-git clone https://github.com/jikerdev/ChatGPT-AI.git
+git clone https://github.com/jikerdev/ChatGPT-AI.git ai
 # 安装依赖
 cd ai
 go get
